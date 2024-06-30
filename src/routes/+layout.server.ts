@@ -1,31 +1,37 @@
-import { SPOTIFY_BASE } from '$env/static/private';
-import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
+import { SPOTIFY_BASE_URL } from '$env/static/private';
+import { redirect } from '@sveltejs/kit';
 
 export const load: LayoutServerLoad = async ({ cookies, fetch, url }) => {
-	const access_token = cookies.get('access_token');
-	const refresh_token = cookies.get('refresh_token');
-
-	if (!access_token) {
+	const accessToken = cookies.get('access_token');
+	const refreshToken = cookies.get('refresh_token');
+	if (!accessToken) {
 		return {
 			user: null
 		};
 	}
 
-	const response = await fetch(`${SPOTIFY_BASE}/me`, {
+	const profileRes = await fetch(`${SPOTIFY_BASE_URL}/me`, {
 		headers: {
-			Authorization: `Bearer ${access_token}`
+			Authorization: `Bearer ${accessToken}`
 		}
 	});
-
-	if (response.ok) {
-		const result: SpotifyApi.CurrentUsersProfileResponse = await response.json();
+	if (profileRes.ok) {
+		const profile: SpotifyApi.CurrentUsersProfileResponse = await profileRes.json();
+		let userAllPlaylists: SpotifyApi.PlaylistObjectSimplified[] = [];
+		const userPlaylistsRes = await fetch('/api/spotify/me/playlists?limit=50');
+		if (userPlaylistsRes.ok) {
+			const userPlaylistsResJSON: SpotifyApi.ListOfCurrentUsersPlaylistsResponse =
+				await userPlaylistsRes.json();
+			userAllPlaylists = userPlaylistsResJSON.items;
+		}
 		return {
-			user: result
+			user: profile,
+			userAllPlaylists
 		};
 	}
-	if (response.status === 401 && refresh_token) {
-		// refresh the access token and try again
+	if (profileRes.status === 401 && refreshToken) {
+		// refresh the token and try again
 		const refreshRes = await fetch('/api/auth/refresh');
 		if (refreshRes.ok) {
 			throw redirect(307, url.pathname);

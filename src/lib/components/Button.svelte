@@ -13,17 +13,24 @@
 		variant?: 'solid' | 'outline' | 'danger';
 		className?: string;
 	};
+
 	export let element: Element;
 	export let variant: 'solid' | 'outline' | 'danger' = 'solid';
 	export let className: string = '';
+
+	let node: HTMLAnchorElement | HTMLButtonElement;
+
+	export function focus() {
+		node.focus();
+	}
 </script>
 
 <svelte:element
 	this={element}
-	role={element}
+	bind:this={node}
 	class="button button-{variant} {className}"
-	{...$$restProps}
 	on:click
+	{...$$restProps}
 >
 	<slot />
 </svelte:element>

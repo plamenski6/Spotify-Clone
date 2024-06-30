@@ -1,22 +1,19 @@
 <script lang="ts">
-	import type { PageData } from './$types';
 	import { Button } from '$components';
 	import logo from '$assets/Spotify_Logo_RGB_White.png';
 	import cover from '$assets/cover.png';
-
-	export let data: PageData;
 </script>
 
 <div class="wrapper">
 	<div class="content">
-		<img src={logo} class="logo" alt="Spotify Logo" />
+		<img src={logo} class="logo" alt="Spotify" />
 		<h1>EGP 0.00 for 3 months of Premium</h1>
 		<p>Enjoy ad-free music listening, offline playback, and more. Cancel anytime.</p>
 		<div class="buttons">
 			<Button
 				element="a"
 				variant="outline"
-				href="https://www.spotify.com"
+				href="https://www.spotify.com/"
 				target="_blank"
 				rel="noopener noreferrer">Sign Up</Button
 			>
@@ -48,8 +45,8 @@
 		flex: 1;
 		margin-top: 40px;
 		@include breakpoint.up('md') {
-			margin-left: 20px;
 			margin-top: 0;
+			margin-left: 20px;
 		}
 		img {
 			max-width: 100%;
