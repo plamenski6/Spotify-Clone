@@ -6,6 +6,7 @@
 	<option>Option</option>
 </select>
 <button>Button</button>
+<div style="height: 1000px;"></div>
 
 <style lang="scss">
 	h1 {
